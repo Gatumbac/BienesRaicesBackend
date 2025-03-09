@@ -3,6 +3,6 @@ Proyecto web para una empresa de bienes raices. Parte de mi formación en tecnol
 
 ![Pagina inicio](https://github.com/user-attachments/assets/af82999d-85a5-4eea-b700-ce03f52e1961)
 
-![Inicio de sesión en la web](/src/img/web/image.pngimage.png)
+![Inicio de sesión en la web](/src/img/web/image.png)
 
 ![Administrador de bienes raices](/src/img/web/image2.png)
