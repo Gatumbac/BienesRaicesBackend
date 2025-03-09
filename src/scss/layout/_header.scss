@@ -1,0 +1,120 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.header {
+    background-color: v.$grisOscuro;
+    padding: 1rem 0 3rem 0;
+
+    &.inicio {
+        background-image: url(../img/full/header.webp);
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        @include m.tablet {
+            min-height: 70rem;
+        }
+
+        .contenido-header {
+            @include m.tablet {
+                min-height: 60rem;
+            }
+        }
+    }
+
+    .barra {
+        padding-top: 3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        @include m.tablet {
+            align-items: flex-end;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+    }
+
+}
+
+.contenido-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    h1 {
+        color: v.$blanco;
+        display: inline-block;
+        font-weight: v.$bold;
+        text-align: center;
+        @include m.tablet {
+            max-width: 60rem;
+            text-align: left;
+        }
+    }
+}
+
+.navegacion {
+    visibility: hidden;
+    opacity: 0;
+    height: 0;
+    transition: visibility .3s ease-in-out, opacity 0.5s linear;
+
+    @include m.tablet {
+        visibility: visible;
+        height: auto;
+        opacity: 1;
+        display: flex;
+        gap: 2rem;
+    }
+
+    a {
+        font-size: 2.2rem;
+        display: block;
+        color: v.$blanco;
+        text-align: center;
+    }
+}
+
+/* Menú mobile */
+.mobile-menu {
+    @include m.tablet {
+            display: none;
+    }
+
+    img {
+        width: 5rem;
+    }
+}
+
+.mostrar {
+    visibility: visible;
+    opacity: 1;
+    height: auto;
+}
+
+/*Dark Mode*/
+
+.nav-dark-mode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    @include m.tablet {
+        align-items: flex-end;
+    }
+
+    .icon-dark-mode {
+        width: 3rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        filter: invert(100%);
+
+        @include m.tablet {
+            margin-top: 0;
+        }
+
+        &:hover {
+            cursor: pointer ;
+        }
+    }
+}

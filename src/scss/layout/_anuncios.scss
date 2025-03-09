@@ -1,0 +1,98 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use 'sass:color';
+
+.contenedor-anuncios {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    @include m.tablet {
+        @include m.grid(3, 2rem);
+    }
+
+}
+
+.anuncio {
+    background-color: v.$gris;
+    border: solid .1rem color.adjust(v.$grisOscuro, $lightness: 50%);;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+        @include m.tablet {
+            max-height: 25rem;
+        }
+    }
+
+    .contenido-anuncio {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content:space-between;
+        height: 100%;
+
+        h3 {
+            font-weight: v.$bold;
+            margin: 0;
+        }
+        p {
+            text-align: center;
+            margin: 1rem;
+        }
+        .precio {
+            text-align: center;
+            color: v.$verde;
+            font-size: 4rem;
+            font-weight: v.$bold;
+        }
+
+        @include m.tablet {
+            p {
+                text-align: left;
+            }
+        }
+    }
+}
+
+.iconos-caracteristicas{
+    list-style: none;
+    padding: 0;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 3rem;
+
+    max-width: 40rem;
+
+    .icono {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        @include m.telefono {
+            flex-direction: row;
+        }
+
+        @include m.tablet {
+            flex-direction: column;
+        }
+
+        @include m.desktop {
+            flex-direction: row;
+        }
+
+        img {
+            height: 4rem;
+        }
+    }
+    
+}
+
+.anuncios-verMas {
+    margin: 3rem 0;
+    @include m.tablet {
+        display: flex;
+        justify-content: end;
+    }
+}

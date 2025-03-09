@@ -1,0 +1,25 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.conoce-nosotros {
+    @include m.tablet {
+        @include m.grid(2, 3rem);
+    }
+
+    .conoce-contenido {
+        span {
+            font-weight: v.$bold;
+            font-size: 2.5rem;
+        }
+        p {
+            text-align: center;
+        }
+
+        @include m.tablet {
+            p {
+                text-align: left;
+                margin-top: 0;
+            }
+        }
+    }
+}

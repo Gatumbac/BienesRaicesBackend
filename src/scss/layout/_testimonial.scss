@@ -1,0 +1,32 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use 'sass:color';
+
+.testimonio {
+    background-color: v.$verde;
+    padding: 3rem;
+    border-radius: 3rem;
+    p {
+        color: v.$blanco;
+        margin: 0;
+    }
+    .autor {
+        margin-top: 2rem;
+        text-align: right;
+        font-size: 2rem;
+    }
+    @include m.tablet {
+        p {
+            font-size: 2.4rem;
+        }
+        .autor {
+            font-size: 2rem;
+        }
+    }
+}
+
+.testimonio-contenido {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 1rem;
+}

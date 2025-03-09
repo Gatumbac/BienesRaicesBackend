@@ -1,0 +1,57 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.form {
+    p {
+        font-size: 1.4rem;
+        color: v.$grisOscuro;
+        margin: 0;
+    }
+
+    legend {
+        font-size: 2rem;
+        color: v.$grisOscuro;
+
+    }
+
+    label {
+        font-weight: v.$bold;
+        text-transform: uppercase;
+        display: block;
+    }
+
+    input:not([type='submit']), 
+    textarea,
+    select {
+        padding: 1rem;
+        display: block;
+        width: 100%;
+        border: 1px solid v.$gris;
+        background-color: v.$blanco;
+        border-radius: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    textarea {
+        height: 10rem;
+        @include m.tablet {
+            height: 20rem;
+        }
+    }
+
+    .forma-contacto {
+        max-width: 30rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    input[type="radio"] {
+        margin: 0;
+        width: auto;
+    }
+
+    input[type="submit"] {
+        margin: 2rem 0;
+    }
+}

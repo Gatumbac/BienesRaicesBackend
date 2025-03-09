@@ -1,0 +1,52 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use 'sass:color';
+
+.blog-testimoniales {
+    @include m.tablet {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        column-gap: 5rem;
+    }
+}
+
+.blog-entrada {
+    margin-bottom: 2rem;
+    @include m.tablet {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        column-gap: 1.5rem;
+    }
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+.informacion-meta {
+    span {
+        color: v.$amarillo;
+    }
+}
+
+.entrada-contenido {
+    h4 {
+        margin-top: 2rem;
+        line-height: 1.4;
+
+        &:after {
+            content: '';
+            display: block;
+            width: 15rem;
+            height: .5rem;
+            background-color: v.$verde;
+        }
+        @include m.tablet {
+            margin: 0;
+        }
+    }
+
+    a {
+        color: v.$negro;
+    }
+}

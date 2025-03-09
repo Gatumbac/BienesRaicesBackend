@@ -1,0 +1,26 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.contenido-nosotros {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    
+    @include m.tablet {
+        @include m.grid(3, 3rem)
+    }
+}
+
+.seccion-nosotros {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    img {
+        max-height: 10rem;
+    }
+    p {
+        text-align: center;
+        margin-top: 0;
+    }
+}
+

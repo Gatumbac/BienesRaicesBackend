@@ -1,0 +1,40 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use 'sass:color';
+
+.boton {
+    @include m.boton(v.$amarillo, block);
+}
+
+.boton-verde {
+    width: 100%;
+    @include m.boton(v.$verde, block);
+
+    @include m.tablet {
+        width: auto;
+        display: inline-block;
+    }
+}
+
+.boton-rojo {
+    @include m.boton(v.$rojo, block);
+}
+
+.boton-eliminar {
+    width: 100%;
+    padding: 1.5rem 0;
+}
+
+.boton-amarillo {
+    @include m.boton(v.$amarillo, block);
+}
+
+.boton-contacto {
+    @include m.boton(v.$amarillo, block);
+    margin: 2rem 0;
+
+
+    @include m.tablet {
+        display: inline-block;
+    }
+}

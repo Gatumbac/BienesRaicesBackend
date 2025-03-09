@@ -1,0 +1,19 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.pagina-anuncios {
+    margin-bottom: 5rem;
+}
+
+.anuncio-contenido {
+    max-width: 80rem;
+}
+
+.resumen-propiedad {
+    .precio {
+        text-align: left;
+        color: v.$verde;
+        font-size: 3rem;
+        font-weight: v.$bold;
+    }
+}
