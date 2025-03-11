@@ -1,14 +1,15 @@
 <?php
-    require '../includes/funciones.php';
+    require '../includes/app.php';
+    use App\Propiedad;
 
     //Sesión autenticada
     autenticarAdmin();
 
+    //Metodo para obtener todas las propiedades
+    $propiedades = Propiedad::all();
+
     //Database
-    require '../includes/config/database.php';
-    $db = conectarDB();
-    $query = "SELECT * FROM PROPIEDADES";
-    $propiedades = mysqli_query($db, $query);
+
 
     //Resultado de agregar una propiedad
     $resultados = [
@@ -17,10 +18,8 @@
         '3' => 'Anuncio eliminado correctamente'
     ];
 
-    $resultado = 0;
-    if(isset($_GET["resultado"])) {
-        $resultado = $_GET["resultado"];
-    }
+    //Resultado de operaciones
+    $resultado = $_GET["resultado"] ?? null;
 
     //Eliminar propiedad
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -78,16 +77,16 @@
                 </tr>
             </thead>
             <tbody>
-                <?php while($propiedad = mysqli_fetch_assoc($propiedades)) { ?>
+                <?php foreach($propiedades as $propiedad) { ?>
                     <tr>
-                        <td><?php echo $propiedad["id"] ?></td>
-                        <td><?php echo $propiedad["titulo"] ?></td>
-                        <td class="imagen-celda"><img class="imagen-tabla" src="/imagenes/<?php echo $propiedad["imagen"] ?>" alt="imagen casa"></td>
-                        <td>$ <?php echo $propiedad["precio"] ?></td>
+                        <td><?php echo $propiedad->getId() ?></td>
+                        <td><?php echo $propiedad->getTitulo() ?></td>
+                        <td class="imagen-celda"><img class="imagen-tabla" src="/imagenes/<?php echo $propiedad->getImagen() ?>" alt="imagen casa"></td>
+                        <td>$ <?php echo $propiedad->getPrecio() ?></td>
                         <td>
-                            <a class="boton-amarillo" href="/admin/propiedades/actualizar.php?id=<?php echo $propiedad["id"] ?>">Actualizar</a>
+                            <a class="boton-amarillo" href="/admin/propiedades/actualizar.php?id=<?php echo $propiedad->getId() ?>">Actualizar</a>
                             <form method="POST">
-                                <input type="hidden" name="id" value="<?php echo $propiedad['id'] ?>">
+                                <input type="hidden" name="id" value="<?php echo $propiedad->getId() ?>">
                                 <input type="submit" class="boton-rojo boton-eliminar" value="Eliminar">
                             </form>
                         </td>

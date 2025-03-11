@@ -23,3 +23,16 @@ function debugear($variable) {
     echo '</pre>';
     exit;
 }
+
+//Escapar el html
+function s($html) {
+    return htmlspecialchars($html);
+}
+
+//Validar variable importante
+function verificarExistencia($variable) {
+    if (!$variable) {
+        header('Location: /admin');
+        exit;
+    }
+}

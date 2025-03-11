@@ -10,40 +10,127 @@ class Propiedad {
     public static $errores = [];
 
     //Atributos
-    public $id;
-    public $titulo;
-    public $precio;
-    public $imagen;
-    public $descripcion;
-    public $cantidad_habitaciones;
-    public $cantidad_wc;
-    public $cantidad_parqueos;
-    public $vendedores_id;
-    public $fecha_creacion;
+    private $id;
+    private $titulo;
+    private $precio;
+    private $imagen;
+    private $descripcion;
+    private $cantidad_habitaciones;
+    private $cantidad_wc;
+    private $cantidad_parqueos;
+    private $vendedores_id;
+    private $fecha_creacion;
     
     public function __construct(array $args = [])
     {
         $this->id = $args['id'] ?? '';
         $this->titulo = $args['titulo'] ?? '';
-        $this->precio = $args['precio'] ?? 0;
+        $this->precio = $args['precio'] ?? '';
         $this->imagen = $args['imagen'] ?? '';
         $this->descripcion = $args['descripcion'] ?? '';
-        $this->cantidad_habitaciones = $args['habitaciones'] ?? 0;
-        $this->cantidad_wc = $args['wc'] ?? 0;
-        $this->cantidad_parqueos = $args['parqueos'] ?? 0;
-        $this->vendedores_id = $args['vendedor_id'] ?? 0;
+        $this->cantidad_habitaciones = $args['cantidad_habitaciones'] ?? '';
+        $this->cantidad_wc = $args['cantidad_wc'] ?? '';
+        $this->cantidad_parqueos = $args['cantidad_parqueos'] ?? '';
+        $this->vendedores_id = $args['vendedor_id'] ?? "1";
         $this->fecha_creacion = date('Y-m-d');
     }
 
-    public static function setDB($database) {
-        self::$db = $database;
+    // Getters y Setters
+    public function getId() {
+        return $this->id;
+    }
+
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    public function getTitulo() {
+        return $this->titulo;
+    }
+
+    public function setTitulo($titulo) {
+        $this->titulo = $titulo;
+    }
+
+    public function getPrecio() {
+        return $this->precio;
+    }
+
+    public function setPrecio($precio) {
+        $this->precio = $precio;
+    }
+
+    public function getImagen() {
+        return $this->imagen;
     }
 
     public function setImagen(string $nombreImagen) {
         $this->imagen = $nombreImagen;
     }
 
+    public function getDescripcion() {
+        return $this->descripcion;
+    }
+
+    public function setDescripcion($descripcion) {
+        $this->descripcion = $descripcion;
+    }
+
+    public function getCantidadHabitaciones() {
+        return $this->cantidad_habitaciones;
+    }
+
+    public function setCantidadHabitaciones($cantidad_habitaciones) {
+        $this->cantidad_habitaciones = $cantidad_habitaciones;
+    }
+
+    public function getCantidadWc() {
+        return $this->cantidad_wc;
+    }
+
+    public function setCantidadWc($cantidad_wc) {
+        $this->cantidad_wc = $cantidad_wc;
+    }
+
+    public function getCantidadParqueos() {
+        return $this->cantidad_parqueos;
+    }
+
+    public function setCantidadParqueos($cantidad_parqueos) {
+        $this->cantidad_parqueos = $cantidad_parqueos;
+    }
+
+    public function getVendedoresId() {
+        return $this->vendedores_id;
+    }
+
+    public function setVendedoresId($vendedores_id) {
+        $this->vendedores_id = $vendedores_id;
+    }
+
+    public function getFechaCreacion() {
+        return $this->fecha_creacion;
+    }
+
+    public function setFechaCreacion($fecha_creacion) {
+        $this->fecha_creacion = $fecha_creacion;
+    }
+
+    public static function setDB($database) {
+        self::$db = $database;
+    }
+
     public function guardar() {
+        $resultado = false;
+        if(!$this->id) {
+            $resultado = $this->crear();
+        } else {
+            $resultado = $this->actualizar();
+        }
+        return $resultado;
+    }
+
+    public function crear() {
         //Sanitizar los datos
         $atributos = $this->sanitizarDatos();
         $stringColumnas = join(", ", array_keys($atributos));
@@ -56,6 +143,26 @@ class Propiedad {
             $resultado = self::$db->query($query);
         } catch (\Throwable $th) {
             echo 'No se pudo insertar la propiedad: ' . $th->getMessage();
+        }
+        return $resultado;
+    }
+
+    public function actualizar() {
+        $atributos = $this->sanitizarDatos();
+        $valores = [];
+
+        foreach($atributos as $atributo=>$valor) {
+            $valores[] = "{$atributo}='{$valor}'";
+        }
+
+        $id = self::$db->escape_string($this->id);
+        $query = "UPDATE PROPIEDADES SET " . join(", ", $valores) . " WHERE id = '{$id}'";
+        
+        $resultado = false;
+        try {
+            $resultado = self::$db->query($query);
+        } catch (\Throwable $th) {
+            echo 'No se pudo actualizar la propiedad: ' . $th->getMessage();
         }
         return $resultado;
     }
@@ -85,6 +192,8 @@ class Propiedad {
     }
 
     public function validar() {
+        self::$errores = [];
+
         if (!$this->titulo) {
             self::$errores[] = 'El título es obligatorio';
         }
@@ -110,6 +219,41 @@ class Propiedad {
         }
 
         return self::$errores;
+    }
+
+    public static function all() {
+        $query = "SELECT * FROM PROPIEDADES";
+        $arrayPropiedades = self::consultarTabla($query);
+        return $arrayPropiedades;
+    }
+
+    public static function find($id) {
+        $query = "SELECT * FROM PROPIEDADES WHERE id = {$id}";
+        $resultado = self::consultarTabla($query);
+        return array_shift($resultado);
+    }
+
+    public static function consultarTabla($query) {
+        $resultado = self::$db->query($query);
+        $array = [];
+        while ($registro = $resultado->fetch_assoc()) {
+            $array[] = self::crearObjeto($registro);
+        }
+        return $array;
+    }
+
+    public static function crearObjeto(array $registro) {
+        $objeto = new self($registro);
+        return $objeto;
+    }
+
+    //Sincronizar
+    public function sincronizar(array $args = []) {
+        foreach($args as $atributo=>$valor) {
+            if (property_exists($this, $atributo)) {
+                $this->$atributo = $valor;
+            }
+        }
     }
 
 
