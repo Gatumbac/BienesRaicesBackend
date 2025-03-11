@@ -2,7 +2,7 @@
 
     //Autenticación de usuario
     //Conexión
-    require 'includes/config/database.php';
+    require 'includes/app.php';
     $db = conectarDB();
 
     //Arreglo de mensajes de error
@@ -55,7 +55,6 @@
 
 
     //Header
-    require 'includes/funciones.php';
     incluirTemplate('header');
 ?>
 

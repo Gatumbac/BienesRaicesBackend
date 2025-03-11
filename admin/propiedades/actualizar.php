@@ -1,14 +1,9 @@
 <?php
-    require '../../includes/funciones.php';
+    require '../../includes/app.php';
 
     //Sesión autenticada
-    $auth = isAuth();
-    if(!$auth) {
-        header('Location: /');
-        exit;
-    }
+    autenticarAdmin();
 
-    require '../../includes/config/database.php';
     $db = conectarDB();
 
     //Vendedores

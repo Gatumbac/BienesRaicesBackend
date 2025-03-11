@@ -1,5 +1,5 @@
 <?php
-    require 'includes/config/database.php';
+    require 'includes/app.php';
     $db = conectarDB();
     if(!isset($_GET['id'])) {
         header('Location: /anuncios.php');
@@ -24,7 +24,6 @@
 
     $anuncio = mysqli_fetch_assoc($resultado);
 
-    require 'includes/funciones.php';
     incluirTemplate('header');
 ?>
 

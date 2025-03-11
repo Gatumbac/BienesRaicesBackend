@@ -2,11 +2,7 @@
     require '../includes/funciones.php';
 
     //Sesión autenticada
-    $auth = isAuth();
-    if(!$auth) {
-        header('Location: /');
-        exit;
-    }
+    autenticarAdmin();
 
     //Database
     require '../includes/config/database.php';

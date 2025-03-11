@@ -1,5 +1,4 @@
 <?php
-    require __DIR__ . '/../config/database.php';
     $db = conectarDB();
     $limite = 3;
     $query = "SELECT * FROM PROPIEDADES ORDER BY id DESC LIMIT {$limite}";
