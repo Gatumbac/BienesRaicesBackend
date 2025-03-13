@@ -1,25 +1,21 @@
 <?php
 namespace App;
 
-class Propiedad {
-    //DB
-    protected static $db;
+class Propiedad extends ActiveRecord{
     protected static $columnasDB = ['id', 'titulo', 'precio', 'imagen', 'descripcion', 'cantidad_habitaciones', 'cantidad_wc', 'cantidad_parqueos', 'fecha_creacion', 'vendedores_id'];
 
-    //Errores
-    public static $errores = [];
+    protected static $tabla = 'PROPIEDADES';
 
-    //Atributos
-    private $id;
-    private $titulo;
-    private $precio;
-    private $imagen;
-    private $descripcion;
-    private $cantidad_habitaciones;
-    private $cantidad_wc;
-    private $cantidad_parqueos;
-    private $vendedores_id;
-    private $fecha_creacion;
+    protected $id;
+    protected $titulo;
+    protected $precio;
+    protected $imagen;
+    protected $descripcion;
+    protected $cantidad_habitaciones;
+    protected $cantidad_wc;
+    protected $cantidad_parqueos;
+    protected $vendedores_id;
+    protected $fecha_creacion;
     
     public function __construct(array $args = [])
     {
@@ -31,11 +27,10 @@ class Propiedad {
         $this->cantidad_habitaciones = $args['cantidad_habitaciones'] ?? '';
         $this->cantidad_wc = $args['cantidad_wc'] ?? '';
         $this->cantidad_parqueos = $args['cantidad_parqueos'] ?? '';
-        $this->vendedores_id = $args['vendedor_id'] ?? "1";
+        $this->vendedores_id = $args['vendedores_id'] ?? '';
         $this->fecha_creacion = date('Y-m-d');
     }
 
-    // Getters y Setters
     public function getId() {
         return $this->id;
     }
@@ -100,11 +95,11 @@ class Propiedad {
         $this->cantidad_parqueos = $cantidad_parqueos;
     }
 
-    public function getVendedoresId() {
+    public function getVendedorId() {
         return $this->vendedores_id;
     }
 
-    public function setVendedoresId($vendedores_id) {
+    public function setVendedorId($vendedores_id) {
         $this->vendedores_id = $vendedores_id;
     }
 
@@ -114,81 +109,6 @@ class Propiedad {
 
     public function setFechaCreacion($fecha_creacion) {
         $this->fecha_creacion = $fecha_creacion;
-    }
-
-    public static function setDB($database) {
-        self::$db = $database;
-    }
-
-    public function guardar() {
-        $resultado = false;
-        if(!$this->id) {
-            $resultado = $this->crear();
-        } else {
-            $resultado = $this->actualizar();
-        }
-        return $resultado;
-    }
-
-    public function crear() {
-        //Sanitizar los datos
-        $atributos = $this->sanitizarDatos();
-        $stringColumnas = join(", ", array_keys($atributos));
-        $stringValores = join("', '", array_values($atributos));
-
-        //Query
-        $query = "INSERT INTO PROPIEDADES(" . $stringColumnas . ") VALUES ('" . $stringValores . "')";
-        $resultado = false;
-        try {
-            $resultado = self::$db->query($query);
-        } catch (\Throwable $th) {
-            echo 'No se pudo insertar la propiedad: ' . $th->getMessage();
-        }
-        return $resultado;
-    }
-
-    public function actualizar() {
-        $atributos = $this->sanitizarDatos();
-        $valores = [];
-
-        foreach($atributos as $atributo=>$valor) {
-            $valores[] = "{$atributo}='{$valor}'";
-        }
-
-        $id = self::$db->escape_string($this->id);
-        $query = "UPDATE PROPIEDADES SET " . join(", ", $valores) . " WHERE id = '{$id}'";
-        
-        $resultado = false;
-        try {
-            $resultado = self::$db->query($query);
-        } catch (\Throwable $th) {
-            echo 'No se pudo actualizar la propiedad: ' . $th->getMessage();
-        }
-        return $resultado;
-    }
-
-    public function getAtributos() {
-        $atributos = [];
-        foreach (self::$columnasDB as $columna) {
-            if ($columna === 'id') continue;
-            $atributos[$columna] = $this->$columna;
-        }
-        return $atributos;
-    }
-
-    public function sanitizarDatos() {
-        $atributos = $this->getAtributos();
-        $sanitizados = [];
-
-        foreach ($atributos as $columna => $valor) {
-            $sanitizados[$columna] = self::$db->escape_string($valor);
-        }
-
-        return $sanitizados;
-    }
-
-    public static function getErrores() {
-        return self::$errores;
     }
 
     public function validar() {
@@ -220,41 +140,4 @@ class Propiedad {
 
         return self::$errores;
     }
-
-    public static function all() {
-        $query = "SELECT * FROM PROPIEDADES";
-        $arrayPropiedades = self::consultarTabla($query);
-        return $arrayPropiedades;
-    }
-
-    public static function find($id) {
-        $query = "SELECT * FROM PROPIEDADES WHERE id = {$id}";
-        $resultado = self::consultarTabla($query);
-        return array_shift($resultado);
-    }
-
-    public static function consultarTabla($query) {
-        $resultado = self::$db->query($query);
-        $array = [];
-        while ($registro = $resultado->fetch_assoc()) {
-            $array[] = self::crearObjeto($registro);
-        }
-        return $array;
-    }
-
-    public static function crearObjeto(array $registro) {
-        $objeto = new self($registro);
-        return $objeto;
-    }
-
-    //Sincronizar
-    public function sincronizar(array $args = []) {
-        foreach($args as $atributo=>$valor) {
-            if (property_exists($this, $atributo)) {
-                $this->$atributo = $valor;
-            }
-        }
-    }
-
-
 }

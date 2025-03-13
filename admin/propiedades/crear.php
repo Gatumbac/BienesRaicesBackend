@@ -2,24 +2,16 @@
     require '../../includes/app.php';
     use App\ImagenHandler;
     use App\Propiedad;
+    use App\Vendedor;
 
-
-    //Sesión autenticada
     autenticarAdmin();
 
-    $db = conectarDB();
+    $vendedores = Vendedor::all();
 
-    //Vendedores
-    $queryVendedores = "SELECT * FROM VENDEDORES";
-    $resultadoVendedores = mysqli_query($db, $queryVendedores);
+    $errores = Propiedad::getErrores();
 
-    //Arreglo de mensajes de error
-    $errores = Propiedad::$errores;
-
-    //Propiedad (vacia inicialmente)
     $propiedad = new Propiedad();
 
-    //Envío de formulario
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $propiedad = new Propiedad($_POST);
@@ -32,13 +24,7 @@
 
         if (empty($errores)) {
             ImagenHandler::procesarImagen($_FILES["imagen"], $propiedad->getImagen());
-
-            $resultado = $propiedad->guardar();
-
-            if($resultado) {
-                header("Location: /admin/?resultado=1");
-                exit;
-            }
+            $propiedad->guardar();
         }
     }
 

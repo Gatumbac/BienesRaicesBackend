@@ -73,8 +73,11 @@
 <fieldset>
 <legend>Vendedor</legend>
 
-<select name="vendedor_id" id="vendedores">
-    <option value="1" selected>--Seleccione un vendedor--</option>
+<select name="vendedores_id" id="vendedores">
+    <option value="" selected>--Seleccione un vendedor--</option>
+    <?php foreach($vendedores as $vendedor) { ?>
+        <option <?php echo $propiedad->getVendedorId() === $vendedor->getId() ? 'selected' : ''; ?> value="<?php echo s($vendedor->getId()); ?>"><?php echo $vendedor->getNombre() . " " . $vendedor->getApellido(); ?></option>
+    <?php } ?>
 </select>
 
 </fieldset>

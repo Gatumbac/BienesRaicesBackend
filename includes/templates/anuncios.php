@@ -1,38 +1,35 @@
 <?php
-    $db = conectarDB();
-    $limite = 3;
-    $query = "SELECT * FROM PROPIEDADES ORDER BY id DESC LIMIT {$limite}";
+    use App\Propiedad;
 
-    if(!$inicio) {
-        $query = "SELECT * FROM PROPIEDADES ORDER BY id DESC";
+    $propiedades = Propiedad::all();
+    if($inicio) {
+        $propiedades = Propiedad::take(3);
     }
-    
-    $resultado = mysqli_query($db, $query);
 ?>
 
 <div class="contenedor-anuncios">
-    <?php while($anuncio = mysqli_fetch_assoc($resultado)) { ?>
+    <?php foreach($propiedades as $propiedad) { ?>
     <div class="anuncio">
-        <img src="<?php echo '/imagenes/' . $anuncio['imagen']; ?>" alt="imagen propiedad">
+        <img src="<?php echo '/imagenes/' . $propiedad->getImagen(); ?>" alt="imagen propiedad">
         <div class="contenido-anuncio">
-            <h3><?php echo $anuncio['titulo']; ?></h3>
-            <p><?php echo $anuncio['descripcion']; ?></p>
-            <p class="precio"><?php echo '$ '. $anuncio['precio']; ?></p>
+            <h3><?php echo $propiedad->getTitulo(); ?></h3>
+            <p><?php echo $propiedad->getDescripcion(); ?></p>
+            <p class="precio"><?php echo '$ '. $propiedad->getPrecio(); ?></p>
             <ul class="iconos-caracteristicas">
                 <li class="icono">
                     <img src="src/img/full/icono_wc.svg" alt="icono propiedad">
-                    <p><?php echo $anuncio['cantidad_wc']; ?></p>
+                    <p><?php echo $propiedad->getCantidadWc(); ?></p>
                 </li>
                 <li class="icono">
                     <img src="src/img/full/icono_estacionamiento.svg" alt="icono propiedad">
-                    <p><?php echo $anuncio['cantidad_parqueos']; ?></p>
+                    <p><?php echo $propiedad->getCantidadParqueos(); ?></p>
                 </li>
                 <li class="icono">
                     <img src="src/img/full/icono_dormitorio.svg" alt="icono propiedad">
-                    <p><?php echo $anuncio['cantidad_habitaciones']; ?></p>
+                    <p><?php echo $propiedad->getCantidadHabitaciones(); ?></p>
                 </li>
             </ul>
-            <a class="boton" href="anuncio.php?id=<?php echo $anuncio['id']; ?>">Ver Propiedad</a>
+            <a class="boton" href="anuncio.php?id=<?php echo $propiedad->getId(); ?>">Ver Propiedad</a>
         </div>
     </div>
     <?php } ?>

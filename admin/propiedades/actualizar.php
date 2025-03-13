@@ -2,27 +2,21 @@
     require '../../includes/app.php';
     use App\ImagenHandler;
     use App\Propiedad;
+    use App\Vendedor;
 
     autenticarAdmin();
 
-    //Vendedores
-    $queryVendedores = "SELECT * FROM VENDEDORES";
-    $resultadoVendedores = mysqli_query($db, $queryVendedores);
+    $vendedores = Vendedor::all();
 
-    //Arreglo de mensajes de error
     $errores = Propiedad::getErrores();
 
-    //Id de la propiedad a actualizar y validación
     $idPropiedad = $_GET['id'] ?? '';
     $idPropiedad = filter_var($idPropiedad, FILTER_VALIDATE_INT);
     verificarExistencia($idPropiedad);
 
-
-    //Consulta de la propiedad
     $propiedad = Propiedad::find($idPropiedad);
     verificarExistencia($propiedad);
 
-    //Luego de que el usuario envía el form
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $propiedad->sincronizar($_POST);    
@@ -36,11 +30,7 @@
                 ImagenHandler::procesarImagen($_FILES["imagen"], $propiedad->getImagen());
             }
 
-            $resultado = $propiedad->guardar();
-            if($resultado) {
-                header("Location: /admin/?resultado=2");
-                exit;
-            }
+            $propiedad->guardar();
         }
     }
 

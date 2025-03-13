@@ -36,3 +36,9 @@ function verificarExistencia($variable) {
         exit;
     }
 }
+
+function validarTipo($tipo) {
+    $tipos = ['vendedor', 'propiedad'];
+    $tipoValido = in_array($tipo, $tipos);
+    verificarExistencia($tipoValido);
+}

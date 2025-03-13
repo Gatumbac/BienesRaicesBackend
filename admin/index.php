@@ -1,58 +1,46 @@
 <?php
     require '../includes/app.php';
+    use App\ImagenHandler;
     use App\Propiedad;
+    use App\Vendedor;
 
-    //Sesión autenticada
     autenticarAdmin();
 
-    //Metodo para obtener todas las propiedades
     $propiedades = Propiedad::all();
+    $vendedores = Vendedor::all();
 
-    //Database
-
-
-    //Resultado de agregar una propiedad
     $resultados = [
-        '1' => 'Anuncio creado correctamente',
-        '2' => 'Anuncio actualizado correctamente',
-        '3' => 'Anuncio eliminado correctamente'
+        '1' => 'Registro creado correctamente',
+        '2' => 'Registro actualizado correctamente',
+        '3' => 'Registro eliminado correctamente'
     ];
 
-    //Resultado de operaciones
     $resultado = $_GET["resultado"] ?? null;
 
-    //Eliminar propiedad
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $idPropiedad = $_POST['id'];
-        $idPropiedad = filter_var($idPropiedad, FILTER_VALIDATE_INT);
+        $id = $_POST['id'] ?? '';
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        verificarExistencia($id);
 
-        if(!$idPropiedad) {
-            header('Location: /admin');
-            exit;
-        }
+        $tipo = $_POST['tipo'] ?? ''; 
+        validarTipo($tipo);
 
-        //Eliminar la imagen
-        $queryImagen = "SELECT imagen FROM propiedades WHERE id=$idPropiedad";
-        $resultadoQueryImagen = mysqli_query($db, $queryImagen);
-        $resultadoImagen = mysqli_fetch_assoc($resultadoQueryImagen);
-        $imagenEliminar = $resultadoImagen['imagen'];
-        
-        $rutaImagen = '../imagenes/' . $imagenEliminar;
-        if (file_exists($rutaImagen)) {
-            unlink($rutaImagen);
-        }
-
-        //Eliminar la propiedad
-        $queryEliminacion = "DELETE FROM PROPIEDADES WHERE id=$idPropiedad";
-        $resultadoQuery = mysqli_query($db, $queryEliminacion);
-
-        if($resultadoQuery) {
-            header("Location: /admin/?resultado=3");
-            exit;
+        switch ($tipo) {
+            case 'vendedor':
+                $vendedor = Vendedor::find($id);
+                verificarExistencia($vendedor);
+                $vendedor->eliminar();
+                break;
+            
+            case 'propiedad':
+                $propiedad = Propiedad::find($id);
+                verificarExistencia($propiedad);
+                ImagenHandler::borrarImagen(CARPETA_IMAGENES . $propiedad->getImagen());
+                $propiedad->eliminar();
+                break;
         }
     }
 
-    // Incluye el header
     incluirTemplate('header');
 ?>
 
@@ -63,9 +51,18 @@
                 <?php echo $resultados[$resultado]; ?>
             </div>
         <?php } ?>
+        
+        <div class="admin-botones">
+            <a href="#propiedadesIndice" class="boton-amarilloR">Ver Propiedades</a>
+            <a href="/admin/propiedades/crear.php" class="boton-verde">Nueva Propiedad</a>
+            <a href="/admin/vendedores/crear.php" class="boton-amarilloR">Nuevo Vendedor</a>
+            <a href="#vendedoresIndice" class="boton-verde">Ver Vendedores</a>
 
-        <a href="/admin/propiedades/crear.php" class="boton-verde">Nueva Propiedad</a>
+        </div>
 
+
+        
+        <h2 id="propiedadesIndice">Propiedades</h2>
         <table class="propiedades-tabla">
             <thead>
                 <tr>
@@ -87,6 +84,36 @@
                             <a class="boton-amarillo" href="/admin/propiedades/actualizar.php?id=<?php echo $propiedad->getId() ?>">Actualizar</a>
                             <form method="POST">
                                 <input type="hidden" name="id" value="<?php echo $propiedad->getId() ?>">
+                                <input type="hidden" name="tipo" value="propiedad">
+                                <input type="submit" class="boton-rojo boton-eliminar" value="Eliminar">
+                            </form>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+
+        <h2 id="vendedoresIndice">Vendedores</h2>
+        <table class="propiedades-tabla">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($vendedores as $vendedor) { ?>
+                    <tr>
+                        <td><?php echo $vendedor->getId() ?></td>
+                        <td><?php echo $vendedor->getNombre() . " " . $vendedor->getApellido() ?></td>
+                        <td><?php echo $vendedor->getTelefono() ?></td>
+                        <td>
+                            <a class="boton-amarillo" href="/admin/vendedores/actualizar.php?id=<?php echo $vendedor->getId() ?>">Actualizar</a>
+                            <form method="POST">
+                                <input type="hidden" name="id" value="<?php echo $vendedor->getId() ?>">
+                                <input type="hidden" name="tipo" value="vendedor">
                                 <input type="submit" class="boton-rojo boton-eliminar" value="Eliminar">
                             </form>
                         </td>

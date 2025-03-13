@@ -67,3 +67,11 @@
 .iniciar-sesion {
     max-width: 60rem;
 }
+
+.admin-botones {
+    @include m.tablet {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+    }
+}

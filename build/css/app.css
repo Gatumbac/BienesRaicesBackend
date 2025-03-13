@@ -440,6 +440,28 @@ h4 {
   }
 }
 
+.boton-amarilloR {
+  width: 100%;
+  padding: 1rem 3rem;
+  font-size: 2rem;
+  background-color: #E08709;
+  color: #FFFFFF;
+  text-align: center;
+  display: block;
+  border: none;
+  margin: 1rem 0;
+}
+.boton-amarilloR:hover {
+  background-color: rgb(199.4849785408, 120.2253218884, 8.0150214592);
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .boton-amarilloR {
+    width: auto;
+    display: inline-block;
+  }
+}
+
 .boton-rojo {
   padding: 1rem 3rem;
   font-size: 2rem;
@@ -991,4 +1013,12 @@ h4 {
 
 .iniciar-sesion {
   max-width: 60rem;
+}
+
+@media (min-width: 768px) {
+  .admin-botones {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
 }/*# sourceMappingURL=app.css.map */
