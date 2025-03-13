@@ -1,10 +1,6 @@
 <?php
     use App\Propiedad;
-
-    $propiedades = Propiedad::all();
-    if($inicio) {
-        $propiedades = Propiedad::take(3);
-    }
+    $propiedades = $inicio ? Propiedad::take(3) : Propiedad::all();
 ?>
 
 <div class="contenedor-anuncios">

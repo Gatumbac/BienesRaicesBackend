@@ -9,12 +9,6 @@
     $propiedades = Propiedad::all();
     $vendedores = Vendedor::all();
 
-    $resultados = [
-        '1' => 'Registro creado correctamente',
-        '2' => 'Registro actualizado correctamente',
-        '3' => 'Registro eliminado correctamente'
-    ];
-
     $resultado = $_GET["resultado"] ?? null;
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,9 +40,9 @@
 
     <main class="contenedor seccion">
         <h1>Administrador de Bienes Raíces</h1>
-        <?php if(isset($resultados[$resultado])) { ?>
+        <?php if($mensaje = getMensaje($resultado)) { ?>
             <div class="alerta exito">
-                <?php echo $resultados[$resultado]; ?>
+                <?php echo $mensaje; ?>
             </div>
         <?php } ?>
         
@@ -57,10 +51,7 @@
             <a href="/admin/propiedades/crear.php" class="boton-verde">Nueva Propiedad</a>
             <a href="/admin/vendedores/crear.php" class="boton-amarilloR">Nuevo Vendedor</a>
             <a href="#vendedoresIndice" class="boton-verde">Ver Vendedores</a>
-
         </div>
-
-
         
         <h2 id="propiedadesIndice">Propiedades</h2>
         <table class="propiedades-tabla">

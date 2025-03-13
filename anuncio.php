@@ -1,53 +1,38 @@
 <?php
     require 'includes/app.php';
-    $db = conectarDB();
-    if(!isset($_GET['id'])) {
-        header('Location: /anuncios.php');
-        exit;
-    }
+    use App\Propiedad;
 
-    $id = $_GET['id'];
+    $id = $_GET['id'] ?? '';
     $id = filter_var($id, FILTER_VALIDATE_INT);
-    if(!$id) {
-        header('Location: /anuncios.php');
-        exit;
-    }
+    verificarVariable($id, '/anuncios.php');
 
-    $query = "SELECT * FROM PROPIEDADES WHERE ID = {$id}";
-    
-    $resultado = mysqli_query($db, $query);
-
-    if(!$resultado || mysqli_num_rows($resultado) === 0) {
-        header('Location: /anuncios.php');
-        exit;
-    }
-
-    $anuncio = mysqli_fetch_assoc($resultado);
+    $propiedad = Propiedad::find($id);
+    verificarVariable($propiedad, '/anuncios.php');
 
     incluirTemplate('header');
 ?>
 
     <main class="contenedor seccion anuncio-contenido">
-        <h1><?php echo $anuncio['titulo']; ?></h1>
-        <img src="<?php echo '/imagenes/' . $anuncio['imagen']; ?>" alt="imagen propiedad">
+        <h1><?php echo $propiedad->getTitulo(); ?></h1>
+        <img src="<?php echo '/imagenes/' . $propiedad->getImagen(); ?>" alt="imagen propiedad">
         <div class="resumen-propiedad">
-            <p class="precio"><?php echo '$ '. $anuncio['precio']; ?></p>
+            <p class="precio"><?php echo '$ '. $propiedad->getPrecio(); ?></p>
             <ul class="iconos-caracteristicas">
                 <li class="icono">
                     <img src="src/img/full/icono_wc.svg" alt="icono propiedad">
-                    <p><?php echo $anuncio['cantidad_wc']; ?></p>
+                    <p><?php echo $propiedad->getCantidadWc(); ?></p>
                 </li>
                 <li class="icono">
                     <img src="src/img/full/icono_estacionamiento.svg" alt="icono propiedad">
-                    <p><?php echo $anuncio['cantidad_parqueos']; ?></p>
+                    <p><?php echo $propiedad->getCantidadParqueos(); ?></p>
                 </li>
                 <li class="icono">
                     <img src="src/img/full/icono_dormitorio.svg" alt="icono propiedad">
-                    <p><?php echo $anuncio['cantidad_habitaciones']; ?></p>
+                    <p><?php echo $propiedad->getCantidadHabitaciones(); ?></p>
                 </li>
             </ul>
         </div>
-        <p><?php echo $anuncio['descripcion']; ?></p>
+        <p><?php echo $propiedad->getDescripcion(); ?></p>
     </main>
 
     <?php incluirTemplate('footer'); ?>

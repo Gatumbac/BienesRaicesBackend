@@ -37,8 +37,24 @@ function verificarExistencia($variable) {
     }
 }
 
+function verificarVariable($variable, $header) {
+    if (!$variable) {
+        header('Location: ' . $header);
+        exit;
+    }
+}
+
 function validarTipo($tipo) {
     $tipos = ['vendedor', 'propiedad'];
     $tipoValido = in_array($tipo, $tipos);
     verificarExistencia($tipoValido);
+}
+
+function getMensaje($resultado) {
+    $resultados = [
+        '1' => 'Registro creado correctamente',
+        '2' => 'Registro actualizado correctamente',
+        '3' => 'Registro eliminado correctamente'
+    ];
+    return $resultados[$resultado] ?? '';
 }
